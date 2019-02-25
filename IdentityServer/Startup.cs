@@ -1,16 +1,10 @@
-﻿using System.Linq;
-using System.Reflection;
-using IdentityServer.Data;
+﻿using IdentityServer.Data;
 using IdentityServer.Extensions;
 using IdentityServer.Models;
-using IdentityServer.Services;
 using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +14,11 @@ namespace IdentityServer
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _environment;
+        private readonly ILogger _logger;
+
+        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,72 +26,26 @@ namespace IdentityServer
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
             builder.AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+            _configuration = builder.Build();
+            _environment = env;
+            _logger = loggerFactory.CreateLogger<Startup>();
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContexts<ApplicationDbContext>(Configuration);
+            services.AddDbContexts<ApplicationDbContext>(_configuration);
 
-            services.AddAuthenticationServices<ApplicationDbContext, UserIdentity, UserIdentityRole>(Environment, Configuration, Logger);
+            services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, IdentityRole>
+                (_environment, _configuration, _logger);
+
+            services.AddApplicationServices();
 
             services.AddMvcLocalization();
-
-
-            /**************************/
-
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
-            // Add framework services.
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
-                .AddErrorDescriber<Aibol2IdentityErrorDescriber>();
-
-
-            // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
-
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
-                .AddInMemoryPersistedGrants()
-                // this adds the config data from DB (clients, resources)
-                //      .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                //      .AddInMemoryClients(Config.GetClients())
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(conn, sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
-                // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(conn, sql => sql.MigrationsAssembly(migrationsAssembly));
-
-                    // this enables automatic token cleanup. this is optional.
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 3600;
-                })
-                .AddAspNetIdentity<ApplicationUser>();
-
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            // this will do the initial DB population
-            InitializeDatabase(app);
+            AutoMigration(app);
 
             if (env.IsDevelopment())
             {
@@ -121,7 +73,7 @@ namespace IdentityServer
             });
         }
 
-        private static void InitializeDatabase(IApplicationBuilder app)
+        private static void AutoMigration(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -132,34 +84,6 @@ namespace IdentityServer
 
                 var configContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 configContext.Database.Migrate();
-
-                if (!userContext.Users.Any())
-                {
-                    foreach (var user in Config.GetUsers())
-                        userContext.Users.Add(user);
-                    userContext.SaveChanges();
-                }
-
-                if (!configContext.Clients.Any())
-                {
-                    foreach (var client in Config.GetClients())
-                        configContext.Clients.Add(client.ToEntity());
-                    configContext.SaveChanges();
-                }
-
-                if (!configContext.IdentityResources.Any())
-                {
-                    foreach (var resource in Config.GetIdentityResources())
-                        configContext.IdentityResources.Add(resource.ToEntity());
-                    configContext.SaveChanges();
-                }
-
-                if (!configContext.ApiResources.Any())
-                {
-                    foreach (var resource in Config.GetApiResources())
-                        configContext.ApiResources.Add(resource.ToEntity());
-                    configContext.SaveChanges();
-                }
             }
         }
     }

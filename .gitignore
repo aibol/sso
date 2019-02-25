@@ -11,6 +11,7 @@
 *.sln.docstates
 error.txt
 info.txt
+appsettings.Development.*
 
 # Build results
 [Dd]ebug/

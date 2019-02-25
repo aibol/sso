@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
 @model LoginViewModel
+@inject IViewLocalizer Localizer
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
@@ -28,7 +30,7 @@
                 <form class="m-t" asp-controller="account" asp-action="login" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
                     <div asp-validation-summary="All" class="text-danger text-left"></div>
                     <div class="form-group">
-                        <input asp-for="Email" class="form-control" placeholder="用户名/邮箱" required=""/>
+                        <input asp-for="Email" class="form-control" placeholder="用户名/邮箱" required="" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -38,7 +40,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin"/> 记住我
+                                <input asp-for="RememberLogin" /> 记住我
                             </label>
                         </div>
                     </div>
@@ -67,7 +69,7 @@
                         }
                     }
                 </section>
-                <hr/>
+                <hr />
                 <p class="text-muted">
                     <small>如果您还没有注册?</small>
                 </p>

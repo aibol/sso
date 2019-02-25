@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Device\Success.cshtml" />
+    <None Include="Views\Device\UserCodeCapture.cshtml" />
+    <None Include="Views\Device\UserCodeConfirmation.cshtml" />
+    <None Include="Views\Diagnostics\Index.cshtml" />
     <None Include="Views\Consent\Index.cshtml" />
     <None Include="Views\Consent\_ScopeListItem.cshtml" />
     <None Include="wwwroot\lib\font-awesome\fonts\fontawesome-webfont.svg" />

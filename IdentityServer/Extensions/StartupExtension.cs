@@ -1,12 +1,18 @@
 ﻿using System.Globalization;
+using System.Reflection;
 using IdentityServer.Models;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.Extensions
 {
@@ -16,6 +22,62 @@ namespace IdentityServer.Extensions
         {
             var connectionString = configuration.GetConnectionString(ConfigurationConsts.AdminConnectionStringKey);
             services.AddDbContext<TContext>(options => options.UseSqlServer(connectionString));
+        }
+
+        public static void AddAuthenticationServices<TContext, TUserIdentity, TUserIdentityRole>(this IServiceCollection services, 
+            IHostingEnvironment hostingEnvironment, IConfiguration configuration, ILogger logger)
+            where TContext : DbContext where TUserIdentity : class where TUserIdentityRole : class
+        {
+            var connectionString = configuration.GetConnectionString(ConfigurationConsts.AdminConnectionStringKey);
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            // Add framework services.
+            services.AddIdentity<TUserIdentity, TUserIdentityRole>()
+                .AddEntityFrameworkStores<TContext>()
+                .AddDefaultTokenProviders()
+                .AddErrorDescriber<Aibol2IdentityErrorDescriber>();
+
+            services.Configure<IISOptions>(iis =>
+            {
+                iis.AuthenticationDisplayName = "Windows";
+                iis.AutomaticAuthentication = false;
+            });
+
+            var builder = services.AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                })
+                .AddAspNetIdentity<TUserIdentity>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.EnableTokenCleanup = true;
+                });
+
+            builder.AddCustomSigningCredential(configuration, logger);
+            builder.AddCustomValidationKey(configuration, logger);
+        }
+
+        public static void AddApplicationServices(this IServiceCollection services)
+        {
+            // Add application services.
+            services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            // cookie policy
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
         }
 
         public static void AddMvcLocalization(this IServiceCollection services)
