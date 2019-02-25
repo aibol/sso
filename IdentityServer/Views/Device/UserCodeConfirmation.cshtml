@@ -1,5 +1,6 @@
-@model MyProject.STS.Identity.Quickstart.Device.DeviceAuthorizationViewModel
+@using IdentityServer.Models.Device
 @using Microsoft.AspNetCore.Mvc.Localization
+@model DeviceAuthorizationViewModel
 @inject IViewLocalizer Localizer
 
 <div class="consent-container">
@@ -20,7 +21,7 @@
         <div class="row">
             <div class="col-sm-8">
                 <p>
-                   @Localizer["ConfirmCode"] "@Model.UserCode".
+                    @Localizer["ConfirmCode"] "@Model.UserCode".
                 </p>
             </div>
         </div>
