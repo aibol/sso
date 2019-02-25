@@ -1,8 +1,9 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using IdentityServer.Models.Identity
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.Localization
 @model LoginViewModel
 @inject IViewLocalizer Localizer
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<UserIdentity> SignInManager
 
 @{
     ViewData["Title"] = "登录";

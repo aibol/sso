@@ -2,6 +2,7 @@
 using System.Reflection;
 using IdentityServer.Models;
 using IdentityServer.Services;
+using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,11 +23,19 @@ namespace IdentityServer.Extensions
         {
             var connectionString = configuration.GetConnectionString(ConfigurationConsts.AdminConnectionStringKey);
             services.AddDbContext<TContext>(options => options.UseSqlServer(connectionString));
+
+            var operationalStoreOptions = new OperationalStoreOptions();
+            services.AddSingleton(operationalStoreOptions);
+
+            var storeOptions = new ConfigurationStoreOptions();
+            services.AddSingleton(storeOptions);
         }
 
         public static void AddAuthenticationServices<TContext, TUserIdentity, TUserIdentityRole>(this IServiceCollection services, 
             IHostingEnvironment hostingEnvironment, IConfiguration configuration, ILogger logger)
-            where TContext : DbContext where TUserIdentity : class where TUserIdentityRole : class
+            where TContext : DbContext 
+            where TUserIdentity : class 
+            where TUserIdentityRole : class
         {
             var connectionString = configuration.GetConnectionString(ConfigurationConsts.AdminConnectionStringKey);
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;

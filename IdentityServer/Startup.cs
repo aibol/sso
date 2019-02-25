@@ -1,10 +1,8 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.Extensions;
-using IdentityServer.Models;
-using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer.Models.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,9 +31,9 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContexts<ApplicationDbContext>(_configuration);
+            services.AddDbContexts<UserIdentityDbContext>(_configuration);
 
-            services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, IdentityRole>
+            services.AddAuthenticationServices<UserIdentityDbContext, UserIdentity, UserIdentityRole>
                 (_environment, _configuration, _logger);
 
             services.AddApplicationServices();
@@ -77,13 +75,11 @@ namespace IdentityServer
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+                //scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
-                var userContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                userContext.Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<UserIdentityDbContext>().Database.Migrate();
 
-                var configContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                configContext.Database.Migrate();
+                //scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
             }
         }
     }

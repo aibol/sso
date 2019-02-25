@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer.Models;
+using IdentityServer.Models.Identity;
 using IdentityServer.Models.Manage;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,12 @@ namespace IdentityServer.Controllers
     {
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<UserIdentity> _signInManager;
         private readonly ISmsSender _smsSender;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<UserIdentity> _userManager;
 
-        public ManageController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+        public ManageController(UserManager<UserIdentity> userManager,
+            SignInManager<UserIdentity> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
@@ -347,7 +348,7 @@ namespace IdentityServer.Controllers
             Error
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync()
+        private Task<UserIdentity> GetCurrentUserAsync()
         {
             return _userManager.GetUserAsync(HttpContext.User);
         }
