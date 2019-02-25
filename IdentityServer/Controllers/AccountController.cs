@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using IdentityServer.Models;
 using IdentityServer.Models.Account;
+using IdentityServer.Models.Identity;
 using IdentityServer.Services;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -25,18 +26,18 @@ namespace IdentityServer.Controllers
         private readonly AccountService _account;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<UserIdentity> _signInManager;
         private readonly ISmsSender _smsSender;
         private readonly IClientStore _store;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<UserIdentity> _userManager;
         private readonly IIdentityServerInteractionService _interaction;
 
         public AccountController(IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
             IClientStore clientStore,
-            SignInManager<ApplicationUser> signInManager,
+            SignInManager<UserIdentity> signInManager,
             ILoggerFactory loggerFactory,
-            UserManager<ApplicationUser> userManager,
+            UserManager<UserIdentity> userManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             IClientStore store, 
@@ -172,7 +173,7 @@ namespace IdentityServer.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new UserIdentity { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -354,7 +355,7 @@ namespace IdentityServer.Controllers
                 var info = await _signInManager.GetExternalLoginInfoAsync();
                 if (info == null)
                     return View("ExternalLoginFailure");
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new UserIdentity { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
