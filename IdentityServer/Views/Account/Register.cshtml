@@ -1,0 +1,67 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "注册";
+    Layout = "~/Views/Shared/_Layout.2.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/iCheck/custom.css" />
+}
+
+@section Scripts {
+    <script src="~/lib/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        });
+    </script>
+}
+
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">AI+</h1>
+        </div>
+        <h3>创建您的新账号</h3>
+        <p>注册领承科技的AI+账号，获取您的专属权益</p>
+        <form class="m-t form-horizontal"
+              asp-controller="Account" asp-action="Register"
+              asp-route-clientid="@ViewData["ClientId"]"
+              asp-route-returnurl="@ViewData["ReturnUrl"]"
+              method="post">
+            <div asp-validation-summary="All" class="text-danger text-left"></div>
+            <div class="form-group">
+                <input asp-for="Email" class="form-control" placeholder="邮箱" required="" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Password" class="form-control" placeholder="密码" required="" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="确认密码" required="" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="text-left">
+                    <a href="#">隐私条款</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary block full-width m-b">注册</button>
+                <i class="text-muted"><small>点击注册按钮即表示您已阅读并同意本站隐私条款</small></i>
+            </div>
+            <div class="form-group">
+                <hr class="dark"/>
+                <a class="btn btn-sm btn-white btn-block"
+                   asp-controller="account"
+                   asp-action="login"
+                   asp-route-returnurl="@ViewData["ReturnUrl"]">已有账号?直接登录</a>
+            </div>
+        </form>
+
+    </div>
+</div>

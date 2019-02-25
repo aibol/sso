@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "登录";
+    Layout = "~/Views/Shared/_Layout.2.cshtml";
+}
+
+<div class="loginColumns animated fadeInDown">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="font-bold">欢迎您访问领承科技在线系统</h2>
+            <p>本系统采用OAuth2.0认证和授权体系，是领承科技软件系统的统一认证平台。</p>
+            <p>
+                如果您是领承的合作伙伴或独立开发团队（人员），可以通过访问 <a href="https://docs.aibol.com/sso">认证系统帮助文档</a> 来了解如何与本系统集成。
+                如果您对OAuth2.0的认证已非常熟悉，可以直接访问 <a target="_blank" href="/.well-known/openid-configuration">接口定义</a> 来获取所需要的接口信息。
+            </p>
+            <p>
+                如果您需要搭建私有的单点登录认证平台，可以通过访问 <a href="https://req.aibol.com/sso">需求管理系统</a> 告知我们您的要求。
+            </p>
+            <p>
+                <small>如果您是普通用户，通常不需要在此页面登录或注册。</small>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <div class="ibox-content">
+                <form class="m-t" asp-controller="account" asp-action="login" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div asp-validation-summary="All" class="text-danger text-left"></div>
+                    <div class="form-group">
+                        <input asp-for="Email" class="form-control" placeholder="用户名/邮箱" required=""/>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="密码" required="">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="RememberLogin">
+                                <input asp-for="RememberLogin"/> 记住我
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary block full-width m-b">登录系统</button>
+                    <div class="text-right">
+                        <small>无法登录?可以 <a asp-action="forgotpassword">重置密码</a></small>
+                    </div>
+                </form>
+                <section>
+                    @{
+                        // "http://go.microsoft.com/fwlink/?LinkID=532715"
+                        var loginProviders = Model.ExternalProviders.ToArray();
+                        if (loginProviders.Length > 0)
+                        {
+                            <span>其它登录方式 </span>
+                            <form asp-controller="account" asp-action="externallogin" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                <div>
+                                    <p>
+                                        @foreach (var provider in loginProviders)
+                                        {
+                                            <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="使用您的 @provider.DisplayName 账号登录">@provider.AuthenticationScheme</button>
+                                        }
+                                    </p>
+                                </div>
+                            </form>
+                        }
+                    }
+                </section>
+                <hr/>
+                <p class="text-muted">
+                    <small>如果您还没有注册?</small>
+                </p>
+                <a class="btn btn-sm btn-white btn-block" asp-controller="account" asp-action="register" asp-route-returnurl="@Model.ReturnUrl">点此创建您的账号</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
