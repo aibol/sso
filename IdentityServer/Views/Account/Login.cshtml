@@ -1,4 +1,5 @@
-﻿@using IdentityServer.Models.Identity
+﻿@using System.Linq
+@using IdentityServer.Models.Identity
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.Localization
 @model LoginViewModel
@@ -28,7 +29,7 @@
         </div>
         <div class="col-md-6">
             <div class="ibox-content">
-                <form class="m-t" asp-controller="account" asp-action="login" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <form class="m-t form-horizontal" asp-controller="account" asp-action="login" asp-route-returnurl="@Model.ReturnUrl" method="post">
                     <div asp-validation-summary="All" class="text-danger text-left"></div>
                     <div class="form-group">
                         <input asp-for="Email" class="form-control" placeholder="用户名/邮箱" required="" />
