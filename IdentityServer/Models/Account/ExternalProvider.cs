@@ -14,5 +14,7 @@
         public string DisplayName { get; set; }
 
         public string AuthenticationScheme { get; set; }
+
+        public string IconUrl => $"/img/ext/{AuthenticationScheme}.png";
     }
 }

@@ -4,6 +4,7 @@ using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer.Models.Account
@@ -12,15 +13,18 @@ namespace IdentityServer.Models.Account
     {
         private readonly IClientStore _clientStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IIdentityServerInteractionService _interaction;
 
         public AccountService(IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
-            IClientStore clientStore)
+            IClientStore clientStore, 
+            IAuthenticationSchemeProvider schemeProvider)
         {
             _interaction = interaction;
             _httpContextAccessor = httpContext;
             _clientStore = clientStore;
+            _schemeProvider = schemeProvider;
         }
 
         public async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
@@ -38,15 +42,15 @@ namespace IdentityServer.Models.Account
                 return lvm;
             }
 
-            var schemes = _httpContextAccessor.HttpContext.Authentication.GetAuthenticationSchemes();
+            var schemes = await _schemeProvider.GetAllSchemesAsync();
 
             var providers = schemes
                 .Where(x => x.DisplayName != null &&
-                            !AccountOptions.WindowsAuthenticationSchemes.Contains(x.AuthenticationScheme))
+                            !AccountOptions.WindowsAuthenticationSchemes.Contains(x.Name))
                 .Select(x => new ExternalProvider
                 {
                     DisplayName = x.DisplayName,
-                    AuthenticationScheme = x.AuthenticationScheme
+                    AuthenticationScheme = x.Name
                 })
                 .ToList();
 
@@ -54,7 +58,7 @@ namespace IdentityServer.Models.Account
             {
                 // this is needed to handle windows auth schemes
                 var windowsSchemes = schemes.Where(s =>
-                    AccountOptions.WindowsAuthenticationSchemes.Contains(s.AuthenticationScheme));
+                    AccountOptions.WindowsAuthenticationSchemes.Contains(s.Name));
                 if (windowsSchemes.Any())
                 {
                     var externalProvider = new ExternalProvider

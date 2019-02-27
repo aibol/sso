@@ -30,7 +30,6 @@ namespace IdentityServer.Controllers
         private readonly ISmsSender _smsSender;
         private readonly IClientStore _store;
         private readonly UserManager<UserIdentity> _userManager;
-        private readonly IIdentityServerInteractionService _interaction;
 
         public AccountController(IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
@@ -41,17 +40,16 @@ namespace IdentityServer.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             IClientStore store, 
-            IIdentityServerInteractionService interaction1)
+            IAuthenticationSchemeProvider schemeProvider)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _store = store;
-            _interaction = interaction1;
 
             _logger = loggerFactory.CreateLogger<AccountController>();
-            _account = new AccountService(interaction, httpContext, clientStore);
+            _account = new AccountService(interaction, httpContext, clientStore, schemeProvider);
         }
 
         //

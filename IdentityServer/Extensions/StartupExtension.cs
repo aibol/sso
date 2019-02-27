@@ -1,7 +1,10 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using IdentityServer.Externals.Weibo;
+using IdentityServer.Externals.Weixin;
 using IdentityServer.Models;
 using IdentityServer.Services;
+using IdentityServer4;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -72,6 +75,23 @@ namespace IdentityServer.Extensions
 
             builder.AddCustomSigningCredential(configuration, logger);
             builder.AddCustomValidationKey(configuration, logger);
+
+            // external logins
+            services.AddAuthentication()
+                .AddWeibo(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "abcd";
+                    options.ClientSecret = "23242";
+                })
+                .AddWeixin(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "abcd";
+                    options.ClientSecret = "23242";
+                });
         }
 
         public static void AddApplicationServices(this IServiceCollection services)
