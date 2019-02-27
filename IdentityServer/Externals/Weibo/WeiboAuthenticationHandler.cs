@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace AspNet.Security.OAuth.Weibo
+namespace IdentityServer.Externals.Weibo
 {
     public class WeiboAuthenticationHandler : OAuthHandler<WeiboAuthenticationOptions>
     {

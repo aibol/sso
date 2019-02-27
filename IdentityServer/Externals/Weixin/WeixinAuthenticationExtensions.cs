@@ -5,11 +5,11 @@
  */
 
 using System;
-using AspNet.Security.OAuth.Weixin;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace IdentityServer.Externals.Weixin
 {
     /// <summary>
     /// Extension methods to add Weixin authentication capabilities to an HTTP application pipeline.

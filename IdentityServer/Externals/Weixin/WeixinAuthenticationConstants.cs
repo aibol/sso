@@ -4,7 +4,7 @@
  * for more information concerning the license and the contributors participating to this project.
  */
 
-namespace AspNet.Security.OAuth.Weixin
+namespace IdentityServer.Externals.Weixin
 {
     /// <summary>
     /// Contains constants specific to the <see cref="WeixinAuthenticationHandler"/>.

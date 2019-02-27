@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using IdentityServer.Externals.Weibo;
+using IdentityServer.Externals.Weixin;
 using IdentityServer.Models;
 using IdentityServer.Services;
 using IdentityServer4;
@@ -76,7 +78,14 @@ namespace IdentityServer.Extensions
 
             // external logins
             services.AddAuthentication()
-                .AddQQ(options =>
+                .AddWeibo(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "abcd";
+                    options.ClientSecret = "23242";
+                })
+                .AddWeixin(options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 

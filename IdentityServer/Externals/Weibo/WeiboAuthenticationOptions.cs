@@ -8,9 +8,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
-using static AspNet.Security.OAuth.Weibo.WeiboAuthenticationConstants;
 
-namespace AspNet.Security.OAuth.Weibo
+namespace IdentityServer.Externals.Weibo
 {
     /// <summary>
     /// Defines a set of options used by <see cref="WeiboAuthenticationHandler"/>.
@@ -29,12 +28,12 @@ namespace AspNet.Security.OAuth.Weibo
             ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
             ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
             ClaimActions.MapJsonKey(ClaimTypes.Gender, "gender");
-            ClaimActions.MapJsonKey(Claims.ScreenName, "screen_name");
-            ClaimActions.MapJsonKey(Claims.ProfileImageUrl, "profile_image_url");
-            ClaimActions.MapJsonKey(Claims.AvatarLarge, "avatar_large");
-            ClaimActions.MapJsonKey(Claims.AvatarHd, "avatar_hd");
-            ClaimActions.MapJsonKey(Claims.CoverImagePhone, "cover_image_phone");
-            ClaimActions.MapJsonKey(Claims.Location, "location");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.ScreenName, "screen_name");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.ProfileImageUrl, "profile_image_url");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.AvatarLarge, "avatar_large");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.AvatarHd, "avatar_hd");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.CoverImagePhone, "cover_image_phone");
+            ClaimActions.MapJsonKey(WeiboAuthenticationConstants.Claims.Location, "location");
 
             Scope.Add("email");
         }

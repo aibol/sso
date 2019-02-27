@@ -5,11 +5,11 @@
  */
 
 using System;
-using AspNet.Security.OAuth.Weibo;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace IdentityServer.Externals.Weibo
 {
     /// <summary>
     /// Extension methods to add Weibo authentication capabilities to an HTTP application pipeline.

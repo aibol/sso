@@ -7,7 +7,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 
-namespace AspNet.Security.OAuth.Weixin
+namespace IdentityServer.Externals.Weixin
 {
     /// <summary>
     /// Default values for Weixin authentication.
@@ -22,7 +22,7 @@ namespace AspNet.Security.OAuth.Weixin
         /// <summary>
         /// Default value for <see cref="AuthenticationScheme.DisplayName"/>.
         /// </summary>
-        public const string DisplayName = "Weixin";
+        public const string DisplayName = "微信";
 
         /// <summary>
         /// Default value for <see cref="RemoteAuthenticationOptions.CallbackPath"/>.

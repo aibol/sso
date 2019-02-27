@@ -7,7 +7,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 
-namespace AspNet.Security.OAuth.Weibo
+namespace IdentityServer.Externals.Weibo
 {
     /// <summary>
     /// Default values for Weibo authentication.
@@ -22,7 +22,7 @@ namespace AspNet.Security.OAuth.Weibo
         /// <summary>
         /// Default value for <see cref="AuthenticationScheme.DisplayName"/>.
         /// </summary>
-        public const string DisplayName = "Weibo";
+        public const string DisplayName = "微博";
 
         /// <summary>
         /// Default value for <see cref="RemoteAuthenticationOptions.CallbackPath"/>.

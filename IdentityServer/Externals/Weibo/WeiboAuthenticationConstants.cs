@@ -4,7 +4,7 @@
  * for more information concerning the license and the contributors participating to this project.
  */
 
-namespace AspNet.Security.OAuth.Weibo
+namespace IdentityServer.Externals.Weibo
 {
     /// <summary>
     /// Contains constants specific to the <see cref="WeiboAuthenticationHandler"/>.

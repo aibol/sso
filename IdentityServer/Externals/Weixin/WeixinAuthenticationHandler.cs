@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace AspNet.Security.OAuth.Weixin
+namespace IdentityServer.Externals.Weixin
 {
     public class WeixinAuthenticationHandler : OAuthHandler<WeixinAuthenticationOptions>
     {

@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using static AspNet.Security.OAuth.Weixin.WeixinAuthenticationConstants;
 
-namespace AspNet.Security.OAuth.Weixin
+namespace IdentityServer.Externals.Weixin
 {
     /// <summary>
     /// Defines a set of options used by <see cref="WeixinAuthenticationHandler"/>.
@@ -34,11 +33,11 @@ namespace AspNet.Security.OAuth.Weixin
             ClaimActions.MapJsonKey(ClaimTypes.Name, "nickname");
             ClaimActions.MapJsonKey(ClaimTypes.Gender, "sex");
             ClaimActions.MapJsonKey(ClaimTypes.Country, "country");
-            ClaimActions.MapJsonKey(Claims.OpenId, "openid");
-            ClaimActions.MapJsonKey(Claims.Province, "province");
-            ClaimActions.MapJsonKey(Claims.City, "city");
-            ClaimActions.MapJsonKey(Claims.HeadImgUrl, "headimgurl");
-            ClaimActions.MapCustomJson(Claims.Privilege, user =>
+            ClaimActions.MapJsonKey(WeixinAuthenticationConstants.Claims.OpenId, "openid");
+            ClaimActions.MapJsonKey(WeixinAuthenticationConstants.Claims.Province, "province");
+            ClaimActions.MapJsonKey(WeixinAuthenticationConstants.Claims.City, "city");
+            ClaimActions.MapJsonKey(WeixinAuthenticationConstants.Claims.HeadImgUrl, "headimgurl");
+            ClaimActions.MapCustomJson(WeixinAuthenticationConstants.Claims.Privilege, user =>
             {
                 var value = user.Value<JArray>("privilege");
                 if (value == null)
