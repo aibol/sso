@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-IdentityServer-A28FF20C-7162-441E-A569-92B5D6E30B35</UserSecretsId>
     <PackageId>aibol2_sso</PackageId>
     <Authors>Shawn Chen</Authors>
