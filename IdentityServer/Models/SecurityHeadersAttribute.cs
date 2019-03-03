@@ -19,17 +19,17 @@ namespace IdentityServer.Models
                     context.HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
                 }
 
-                var csp = "default-src 'self'";
-                // once for standards compliant browsers
-                if (!context.HttpContext.Response.Headers.ContainsKey("Content-Security-Policy"))
-                {
-                    context.HttpContext.Response.Headers.Add("Content-Security-Policy", csp);
-                }
-                // and once again for IE
-                if (!context.HttpContext.Response.Headers.ContainsKey("X-Content-Security-Policy"))
-                {
-                    context.HttpContext.Response.Headers.Add("X-Content-Security-Policy", csp);
-                }
+                //var csp = "default-src *";
+                //// once for standards compliant browsers
+                //if (!context.HttpContext.Response.Headers.ContainsKey("Content-Security-Policy"))
+                //{
+                //    context.HttpContext.Response.Headers.Add("Content-Security-Policy", csp);
+                //}
+                //// and once again for IE
+                //if (!context.HttpContext.Response.Headers.ContainsKey("X-Content-Security-Policy"))
+                //{
+                //    context.HttpContext.Response.Headers.Add("X-Content-Security-Policy", csp);
+                //}
             }
         }
     }
